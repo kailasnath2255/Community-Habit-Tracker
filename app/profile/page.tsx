@@ -43,7 +43,7 @@ export default function ProfilePage() {
         .from('users')
         .select('*')
         .eq('id', authUser.id)
-        .single();
+        .single() as any;
 
       if (error && error.code !== 'PGRST116') {
         // PGRST116 is "not found" error, which is fine for new users
@@ -87,13 +87,15 @@ export default function ProfilePage() {
 
       const { error } = await supabase
         .from('users')
-        .upsert({
-          id: authUser.id,
-          email: authUser.email,
-          full_name: formData.full_name,
-          bio: formData.bio,
-          updated_at: new Date().toISOString(),
-        });
+        .upsert([
+          {
+            id: authUser.id,
+            email: authUser.email,
+            full_name: formData.full_name,
+            bio: formData.bio,
+            updated_at: new Date().toISOString(),
+          },
+        ] as any);
 
       if (error) throw error;
 

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Plus, LogOut, BarChart3, Flame, User, Sparkles } from 'lucide-react';
+import { Plus, LogOut, BarChart3, Flame, User } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/store/auth';
 import { useHabitsStore } from '@/store/habits';

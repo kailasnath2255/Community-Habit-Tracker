@@ -95,10 +95,10 @@ export async function GET() {
   };
 
   if (!adminClient) {
-    return {
+    return Response.json({
       ...results,
       errors: ['Service role key not configured - cannot populate test data'],
-    };
+    });
   }
 
   try {
@@ -106,13 +106,13 @@ export async function GET() {
     const { data: allUsers, error: listError } = await adminClient.auth.admin.listUsers();
 
     if (listError) {
-      return {
+      return Response.json({
         ...results,
         errors: [
           `Could not list users: ${listError.message}`,
           'Fallback: You can manually populate data by logging in as test users and using /sample-data page',
         ],
-      };
+      });
     }
 
     // Process each test user

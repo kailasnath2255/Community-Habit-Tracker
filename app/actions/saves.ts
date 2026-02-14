@@ -38,12 +38,14 @@ export async function toggleSavePost(
       saved = false;
     } else {
       // Save
-      const { error: insertError } = await (serviceClient
+      const { error: insertError } = await serviceClient
         .from('completion_saves')
-        .insert({
-          habit_log_id: habitLogId,
-          user_id: userId,
-        }) as any);
+        .insert([
+          {
+            habit_log_id: habitLogId,
+            user_id: userId,
+          },
+        ] as any);
 
       if (insertError) throw insertError;
       saved = true;

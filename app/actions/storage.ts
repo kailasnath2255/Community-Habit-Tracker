@@ -99,12 +99,14 @@ export async function uploadCompletionImage(
         .eq('habit_log_id', habitLogId);
 
       // Then insert the new image
-      const { error: insertError } = await (serviceClient
+      const { error: insertError } = await serviceClient
         .from('completion_images')
-        .insert({
-          habit_log_id: habitLogId,
-          image_url: imageUrl,
-        }) as any);
+        .insert([
+          {
+            habit_log_id: habitLogId,
+            image_url: imageUrl,
+          },
+        ] as any);
 
       if (insertError) {
         console.error('Insert error:', insertError);

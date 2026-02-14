@@ -10,7 +10,7 @@ export async function createHabit(habitData: {
   name: string;
   description: string;
   color_code: string;
-}, userId?: string) {
+}, userId?: string): Promise<{ success: boolean; data?: any; message?: string; error?: string }> {
   try {
     // If userId is provided, use it (from client-side auth check)
     // If not, try to get from session
@@ -56,7 +56,7 @@ export async function createHabit(habitData: {
 
     const { data, error } = await supabase
       .from('habits')
-      .insert([insertData])
+      .insert([insertData] as any)
       .select()
       .single();
 
@@ -85,7 +85,7 @@ export async function updateHabit(
     color_code?: string;
   },
   userId?: string
-) {
+): Promise<{ success: boolean; data?: any; message?: string; error?: string }> {
   try {
     const supabase = createClient();
 
@@ -115,7 +115,7 @@ export async function updateHabit(
       return { success: false, error: 'Habit not found or unauthorized' };
     }
 
-    const { data, error } = await serviceClient
+    const { data, error } = await (serviceClient
       .from('habits')
       .update({
         ...habitData,
@@ -124,7 +124,7 @@ export async function updateHabit(
       .eq('id', habitId)
       .eq('user_id', user_id)
       .select()
-      .single();
+      .single() as any);
 
     if (error) throw error;
 
@@ -229,9 +229,9 @@ export async function completeHabitToday(habitId: string, userId?: string) {
           habit_id: habitId,
           completed_at: today,
         },
-      ])
+      ] as any)
       .select()
-      .single();
+      .single() as any;
 
     if (error) {
       if (error.code === '23505') {
@@ -345,7 +345,7 @@ export async function getHabitStats(habitId: string, userId?: string) {
       .from('habit_logs')
       .select('completed_at')
       .eq('habit_id', habitId)
-      .gte('completed_at', thirtyDaysAgo.toISOString().split('T')[0]);
+      .gte('completed_at', thirtyDaysAgo.toISOString().split('T')[0]) as any;
 
     const completedDays = logs?.length || 0;
     const completionPercentage = ((completedDays / 30) * 100).toFixed(1);
@@ -358,7 +358,7 @@ export async function getHabitStats(habitId: string, userId?: string) {
       checkDate.setDate(checkDate.getDate() - i);
       const dateStr = checkDate.toISOString().split('T')[0];
 
-      const completed = logs?.some((log) => log.completed_at === dateStr);
+      const completed = logs?.some((log: any) => log.completed_at === dateStr);
       if (completed) {
         currentStreak++;
       } else {
@@ -404,19 +404,19 @@ export async function getUserHabits(userId?: string) {
       .from('habits')
       .select('*')
       .eq('user_id', user_id)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false }) as any;
 
     if (error) throw error;
 
     // Get completion stats for each habit
     const habitsWithStats = await Promise.all(
-      (habits || []).map(async (habit) => {
+      (habits || []).map(async (habit: any) => {
         const { data: logs } = await supabase
           .from('habit_logs')
           .select('completed_at')
           .eq('habit_id', habit.id)
           .order('completed_at', { ascending: false })
-          .limit(30);
+          .limit(30) as any;
 
         const lastCompletion = logs?.[0]?.completed_at || null;
         return {
@@ -447,7 +447,7 @@ export async function getTopUsers(limit = 10) {
 
     const { data: habits, error: habitsError } = await supabase
       .from('habits')
-      .select('user_id');
+      .select('user_id') as any;
 
     if (habitsError) throw habitsError;
 
@@ -455,7 +455,7 @@ export async function getTopUsers(limit = 10) {
 
     const { data: logs, error: logsError } = await supabase
       .from('habit_logs')
-      .select('habit_id, completed_at');
+      .select('habit_id, completed_at') as any;
 
     if (logsError) throw logsError;
 
@@ -488,7 +488,7 @@ export async function getTopUsers(limit = 10) {
       .in('id', userIds);
 
     const ranked = userIds
-      .map((userId: string) => ({
+      .map((userId: any) => ({
         userId,
         ...userStats.get(userId),
         profile: users?.find((u: any) => u.id === userId),

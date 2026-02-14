@@ -48,7 +48,7 @@ export default function NewHabitPage() {
         name: formData.name,
         description: formData.description || '',
         color_code: formData.color_code,
-      }, user.id);
+      }, user.id) as any;
 
       console.log('[handleSubmit] Server action result:', result);
 
@@ -56,7 +56,9 @@ export default function NewHabitPage() {
         throw new Error(result.error);
       }
 
-      addHabit(result.data);
+      if (result?.data) {
+        addHabit(result.data as any);
+      }
       toast.success('Habit created successfully!');
       router.push('/dashboard');
     } catch (error) {
