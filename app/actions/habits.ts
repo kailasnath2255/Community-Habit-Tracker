@@ -115,7 +115,7 @@ export async function updateHabit(
       return { success: false, error: 'Habit not found or unauthorized' };
     }
 
-    const { data, error } = await (serviceClient
+    const { data, error } = await serviceClient
       .from('habits')
       .update({
         ...habitData,
@@ -124,7 +124,7 @@ export async function updateHabit(
       .eq('id', habitId)
       .eq('user_id', user_id)
       .select()
-      .single() as any);
+      .single() as any;
 
     if (error) throw error;
 
