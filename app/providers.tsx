@@ -52,7 +52,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.log('[AuthProvider] Auth state changed:', event, session?.user?.id);
         
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-          const { data: { user }, error } = await supabase.auth.getUser();
+          const { data: { user }, error: _error } = await supabase.auth.getUser();
           useAuthStore.setState({
             user,
             isAuthenticated: !!user,
