@@ -115,12 +115,14 @@ export async function updateHabit(
       return { success: false, error: 'Habit not found or unauthorized' };
     }
 
+    const updateData: any = {
+      ...habitData,
+      updated_at: new Date().toISOString(),
+    };
+
     const { data, error } = await serviceClient
       .from('habits')
-      .update({
-        ...habitData,
-        updated_at: new Date().toISOString(),
-      } as any)
+      .update(updateData)
       .eq('id', habitId)
       .eq('user_id', user_id)
       .select()
