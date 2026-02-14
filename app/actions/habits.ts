@@ -120,8 +120,8 @@ export async function updateHabit(
       updated_at: new Date().toISOString(),
     };
 
-    const { data, error } = await serviceClient
-      .from('habits')
+    const { data, error } = await (serviceClient
+      .from('habits') as any)
       .update(updateData)
       .eq('id', habitId)
       .eq('user_id', user_id)
