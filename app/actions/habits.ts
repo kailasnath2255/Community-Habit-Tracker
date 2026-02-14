@@ -120,7 +120,7 @@ export async function updateHabit(
       .update({
         ...habitData,
         updated_at: new Date().toISOString(),
-      } as any)
+      })
       .eq('id', habitId)
       .eq('user_id', user_id)
       .select()
