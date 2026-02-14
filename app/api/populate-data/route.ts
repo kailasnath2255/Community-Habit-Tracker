@@ -1,5 +1,3 @@
-'use server';
-
 import { createClient } from '@supabase/supabase-js';
 
 const ADMIN_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -87,7 +85,7 @@ const sampleHabits = {
   ],
 };
 
-export async function populateCommunityData() {
+export async function GET() {
   const results = {
     success: 0,
     failed: 0,
@@ -203,5 +201,5 @@ export async function populateCommunityData() {
     results.errors.push(`Fatal error: ${message}`);
   }
 
-  return results;
+return Response.json(results);
 }
